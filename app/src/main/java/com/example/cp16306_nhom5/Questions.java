@@ -1,23 +1,25 @@
-package com.example.cp16306_nhom6;
+package com.example.cp16306_nhom5;
 
 public class Questions {
+
     private String question;
     private String option1;
     private String option2;
     private String option3;
     private String option4;
-    private int answerNum;
+    private int answerNr;
 
-    public Questions() {
+    public Questions(){
+
     }
 
-    public Questions(String question, String option1, String option2, String option3, String option4, int answerNum) {
+    public Questions(String question, String option1, String option2, String option3, String option4, int answerNr) {
         this.question = question;
         this.option1 = option1;
         this.option2 = option2;
         this.option3 = option3;
         this.option4 = option4;
-        this.answerNum = answerNum;
+        this.answerNr = answerNr;
     }
 
     public String getQuestion() {
@@ -60,11 +62,11 @@ public class Questions {
         this.option4 = option4;
     }
 
-    public int getAnswerNum() {
-        return answerNum;
+    public int getAnswerNr() {
+        return answerNr;
     }
 
-    public void setAnswerNum(int answerNum) {
-        this.answerNum = answerNum;
+    public void setAnswerNr(int answerNr) {
+        this.answerNr = answerNr;
     }
 }

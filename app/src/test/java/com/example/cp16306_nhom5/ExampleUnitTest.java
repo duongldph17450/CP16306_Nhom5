@@ -1,4 +1,4 @@
-package com.example.cp16306_nhom6;
+package com.example.cp16306_nhom5;
 
 import org.junit.Test;
 
