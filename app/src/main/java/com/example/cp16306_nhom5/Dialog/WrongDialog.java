@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.cp16306_nhom5.Activities.QuizActivity;
 import com.example.cp16306_nhom5.R;
 
 public class WrongDialog {
@@ -14,23 +15,28 @@ public class WrongDialog {
 
     private Dialog wrongDialog;
 
+    private QuizActivity mQuizActivity;
+
     public WrongDialog(Context mContext) {
         this.mContext = mContext;
     }
 
-    public void wrongDialog(String correctAnswer) {
+    public void wrongDialog(String correctAnswer, final QuizActivity quizActivity) {
+
+        mQuizActivity = quizActivity;
 
         wrongDialog = new Dialog(mContext);
         wrongDialog.setContentView(R.layout.wrong_dialog);
         Button btnWrongDialog = (Button) wrongDialog.findViewById(R.id.btn_wrong_dialog);
         TextView tvCorrectAnswer = (TextView) wrongDialog.findViewById(R.id.tv_correct_answer);
-
+        //Hiển thị đáp án đúng
         tvCorrectAnswer.setText("Đáp án đúng: " + String.valueOf(correctAnswer));
 
         btnWrongDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 wrongDialog.dismiss();
+                mQuizActivity.showQuestions(); //Hiển thị câu hỏi
             }
         });
 

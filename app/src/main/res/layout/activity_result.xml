@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="#4ae9c4"
-    tools:context=".ResultActivity">
+    android:background="#e2eadf"
+    tools:context=".Activities.ResultActivity">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingEnd="30dp"
         android:paddingStart="30dp"
-        android:background="#65ddd5"
+        android:background="@drawable/question_container_background"
         android:orientation="vertical">
 
         <TextView
@@ -25,7 +25,8 @@
             android:layout_marginBottom="7dp"
             android:padding="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:gravity="start" />
         <TextView
             android:id="@+id/result_tv_total_Ques"
             android:text="Tong diem: "
@@ -35,7 +36,8 @@
             android:layout_marginBottom="7dp"
             android:padding="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:gravity="start" />
         <TextView
             android:id="@+id/result_tv_Correct_Ques"
             android:text="Tra loi dung: "
@@ -45,7 +47,8 @@
             android:layout_marginBottom="7dp"
             android:padding="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:gravity="start" />
         <TextView
             android:id="@+id/result_tv_Wrong_Ques"
             android:text="Tra loi sai: "
@@ -54,12 +57,14 @@
             android:textAlignment="textStart"
             android:padding="10dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:gravity="start" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:weightSum="2"
+            android:weightSum="3"
+            android:layout_marginBottom="20dp"
             android:orientation="horizontal">
 
             <Button
@@ -71,7 +76,8 @@
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textStyle="bold"
-                android:textSize="22sp"/>
+                android:textSize="22sp"
+                android:gravity="center_horizontal" />
             <Button
                 android:id="@+id/result_btn_mainmenu"
                 android:layout_width="wrap_content"
@@ -81,7 +87,20 @@
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textStyle="bold"
-                android:textSize="22sp"/>
+                android:textSize="22sp"
+                android:gravity="center_horizontal" />
+            <Button
+                android:id="@+id/result_btn_nextLevel"
+                android:onClick="sendToLevelAgain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Tiếp tục"
+                android:textAlignment="center"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:textSize="22sp"
+                android:gravity="center_horizontal" />
         </LinearLayout>
 
     </LinearLayout>

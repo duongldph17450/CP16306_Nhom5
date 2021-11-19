@@ -1,6 +1,17 @@
-package com.example.cp16306_nhom5;
+package com.example.cp16306_nhom5.model;
 
 public class Questions {
+
+    public static final String CATEGORY_ALL = "All";
+    public static final String CATEGORY_HISTORY = "History";
+    public static final String CATEGORY_MATHS = "Maths";
+    public static final String CATEGORY_ENGLISH = "English";
+    public static final String CATEGORY_GEOGRAPHY = "Geography";
+    public static final String CATEGORY_SCIENCE= "Science";
+
+    public static final int LEVEL1 = 1;
+    public static final int LEVEL2 = 2;
+    public static final int LEVEL3 = 3;
 
     private String question;
     private String option1;
@@ -8,18 +19,22 @@ public class Questions {
     private String option3;
     private String option4;
     private int answerNr;
+    private String category;
+    private int levels;
 
     public Questions(){
 
     }
 
-    public Questions(String question, String option1, String option2, String option3, String option4, int answerNr) {
+    public Questions(String question, String option1, String option2, String option3, String option4, int answerNr, String category, int levels) {
         this.question = question;
         this.option1 = option1;
         this.option2 = option2;
         this.option3 = option3;
         this.option4 = option4;
         this.answerNr = answerNr;
+        this.category  = category;
+        this.levels = levels;
     }
 
     public String getQuestion() {
@@ -68,5 +83,21 @@ public class Questions {
 
     public void setAnswerNr(int answerNr) {
         this.answerNr = answerNr;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public int getLevels() {
+        return levels;
+    }
+
+    public void setLevels(int levels) {
+        this.levels = levels;
     }
 }

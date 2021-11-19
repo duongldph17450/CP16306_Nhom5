@@ -1,14 +1,17 @@
-package com.example.cp16306_nhom5;
+package com.example.cp16306_nhom5.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
@@ -17,9 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.cp16306_nhom5.Audio.PlayAudioForAnswer;
+import com.example.cp16306_nhom5.constants.Constant;
 import com.example.cp16306_nhom5.Dialog.CorrectDialog;
-import com.example.cp16306_nhom5.Dialog.FinalScoreDialog;
+import com.example.cp16306_nhom5.Dialog.TimerDialog;
 import com.example.cp16306_nhom5.Dialog.WrongDialog;
+import com.example.cp16306_nhom5.model.Questions;
+import com.example.cp16306_nhom5.database.QuizDbHelper;
+import com.example.cp16306_nhom5.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +51,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private int correctAns = 0, wrongAns = 0;
 
-    private FinalScoreDialog finalScoreDialog;
+    private TimerDialog timerDialog;
     private CorrectDialog correctDialog;
     private WrongDialog wrongDialog;
     private PlayAudioForAnswer playAudioForAnswer;
@@ -59,6 +66,14 @@ public class QuizActivity extends AppCompatActivity {
     private CountDownTimer countDownTimer;
     private long timeLeftInMillis;
 
+    private long backPressedTime;
+
+    private String categoryValue = "";
+    private int levelsID = 0;
+
+    int UNLOCK_AL2 = 0, UNLOCK_AL3 = 0; //All Level
+    int UNLOCK_HL2 = 0, UNLOCK_HL3 = 0; //History Level
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,11 +81,16 @@ public class QuizActivity extends AppCompatActivity {
 
         setupUI();
 
+        Intent intentCategoryWithLevel = getIntent();
+        categoryValue = intentCategoryWithLevel.getStringExtra("Category");
+        levelsID = intentCategoryWithLevel.getIntExtra("Level", 0);
+
         fetchDB();
+        Log.i("BUGBUG","onCreate() in QuizActivity");
 
         defaultTextColor = rb1.getTextColors();
 
-        finalScoreDialog = new FinalScoreDialog(this);
+        timerDialog = new TimerDialog(this);
         correctDialog = new CorrectDialog(this);
         wrongDialog = new WrongDialog(this);
         playAudioForAnswer = new PlayAudioForAnswer(this);
@@ -99,7 +119,7 @@ public class QuizActivity extends AppCompatActivity {
     private void fetchDB() {
 
         QuizDbHelper dbHelper = new QuizDbHelper(this);
-        questionList = dbHelper.getAllQuestions();
+        questionList = dbHelper.getAllQuestionsWithCategoryAndLevels(levelsID, categoryValue); //gọi method với category&levels
 
         startQuiz();
     }
@@ -183,7 +203,7 @@ public class QuizActivity extends AppCompatActivity {
         int answerNr = rbGroup.indexOfChild(rbSelected) + 1;
 
         checkSolution(answerNr, rbSelected);
-        
+
     }
 
     private void checkSolution(int answerNr, RadioButton rbSelected) {
@@ -199,17 +219,12 @@ public class QuizActivity extends AppCompatActivity {
 
                     score += 20;
                     tvScore.setText("Điểm: " + String.valueOf(score));
-                    correctDialog.correctDialog(score);
+                    correctDialog.correctDialog(score, this);
 
                     FLAG = 1;
                     playAudioForAnswer.setAudioForAnswer(FLAG);
 
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showQuestions();
-                        }
-                    }, 2000);
+
 
                 } else {
 
@@ -222,17 +237,12 @@ public class QuizActivity extends AppCompatActivity {
                     tvScore.setText("Điểm: " + String.valueOf(score));
 
                     String correctAnswer = (String) rb1.getText();
-                    wrongDialog.wrongDialog(correctAnswer);
+                    wrongDialog.wrongDialog(correctAnswer, this);
 
                     FLAG = 2;
                     playAudioForAnswer.setAudioForAnswer(FLAG);
 
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showQuestions();
-                        }
-                    }, 1000);
+
                 }
                 break;
 
@@ -246,17 +256,12 @@ public class QuizActivity extends AppCompatActivity {
 
                     score += 20;
                     tvScore.setText("Điểm: " + String.valueOf(score));
-                    correctDialog.correctDialog(score);
+                    correctDialog.correctDialog(score, this);
 
                     FLAG = 1;
                     playAudioForAnswer.setAudioForAnswer(FLAG);
 
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showQuestions();
-                        }
-                    }, 2000);
+
 
                 } else {
 
@@ -269,17 +274,12 @@ public class QuizActivity extends AppCompatActivity {
                     tvScore.setText("Điểm: " + String.valueOf(score));
 
                     String correctAnswer = (String) rb2.getText();
-                    wrongDialog.wrongDialog(correctAnswer);
+                    wrongDialog.wrongDialog(correctAnswer, this);
 
                     FLAG = 2;
                     playAudioForAnswer.setAudioForAnswer(FLAG);
 
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showQuestions();
-                        }
-                    }, 1000);
+
                 }
                 break;
 
@@ -293,17 +293,12 @@ public class QuizActivity extends AppCompatActivity {
 
                     score += 20;
                     tvScore.setText("Điểm: " + String.valueOf(score));
-                    correctDialog.correctDialog(score);
+                    correctDialog.correctDialog(score, this);
 
                     FLAG = 1;
                     playAudioForAnswer.setAudioForAnswer(FLAG);
 
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showQuestions();
-                        }
-                    }, 2000);
+
 
                 } else {
 
@@ -316,17 +311,12 @@ public class QuizActivity extends AppCompatActivity {
                     tvScore.setText("Điểm: " + String.valueOf(score));
 
                     String correctAnswer = (String) rb3.getText();
-                    wrongDialog.wrongDialog(correctAnswer);
+                    wrongDialog.wrongDialog(correctAnswer, this);
 
                     FLAG = 2;
                     playAudioForAnswer.setAudioForAnswer(FLAG);
 
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showQuestions();
-                        }
-                    }, 1000);
+
                 }
                 break;
 
@@ -340,17 +330,12 @@ public class QuizActivity extends AppCompatActivity {
 
                     score += 20;
                     tvScore.setText("Điểm: " + String.valueOf(score));
-                    correctDialog.correctDialog(score);
+                    correctDialog.correctDialog(score, this);
 
                     FLAG = 1;
                     playAudioForAnswer.setAudioForAnswer(FLAG);
 
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showQuestions();
-                        }
-                    }, 2000);
+
 
                 } else {
 
@@ -363,17 +348,12 @@ public class QuizActivity extends AppCompatActivity {
                     tvScore.setText("Điểm: " + String.valueOf(score));
 
                     String correctAnswer = (String) rb4.getText();
-                    wrongDialog.wrongDialog(correctAnswer);
+                    wrongDialog.wrongDialog(correctAnswer, this);
 
                     FLAG = 2;
                     playAudioForAnswer.setAudioForAnswer(FLAG);
 
-                    handler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            showQuestions();
-                        }
-                    }, 1000);
+
                 }
                 break;
 
@@ -394,7 +374,7 @@ public class QuizActivity extends AppCompatActivity {
         rbSelected.setTextColor(Color.BLACK);
     }
 
-    private void showQuestions() {
+    public void showQuestions() {
 
         rbGroup.clearCheck();
 
@@ -426,17 +406,23 @@ public class QuizActivity extends AppCompatActivity {
         } else {
             //Khi chạy hết số câu hỏi sẽ hiện ra dialog
 
+            Toast.makeText(this, "Hoàn thành Quiz", Toast.LENGTH_SHORT).show();
 
+            rb1.setClickable(false);
+            rb2.setClickable(false);
+            rb3.setClickable(false);
+            rb4.setClickable(false);
+            btnConfirmNext.setClickable(false);
 
             //Sử dụng handler để delay hiển thị
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
 
-                
+                    finalResult();
 
                 }
-            }, 2000);
+            }, 1000);
         }
     }
 
@@ -493,8 +479,7 @@ public class QuizActivity extends AppCompatActivity {
                 @Override
                 public void run() {
 
-                    Intent intent = new Intent(getApplicationContext(), QuizActivity.class);
-                    startActivity(intent);
+                    timerDialog.timerDialog(QuizActivity.this);
 
                 }
             }, 2000);
@@ -503,12 +488,36 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i("BUGBUG","onRestart() in QuizActivity");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i("BUGBUG","onStop() in QuizActivity");
+        finish();
+
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
 
-        if (countDownTimer != null) {
-            countDownTimer.cancel();
-        }
+        Log.i("BUGBUG","onPause() in QuizActivity");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("BUGBUG","onResume() in QuizActivity");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i("BUGBUG","onStart() in QuizActivity");
     }
 
     @Override
@@ -517,6 +526,140 @@ public class QuizActivity extends AppCompatActivity {
 
         if (countDownTimer != null) {
             countDownTimer.cancel();
+        }
+        Log.i("BUGBUG","onDestroy() in QuizActivity");
+    }
+
+    private void finalResult() {
+
+        unlockLevels();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent resultData = new Intent(QuizActivity.this, ResultActivity.class);
+
+                resultData.putExtra("UserScore", score);
+                resultData.putExtra("TotalQuestion", questionTotalCount);
+                resultData.putExtra("CorrectQues", correctAns);
+                resultData.putExtra("WrongQues", wrongAns);
+
+                resultData.putExtra("Category", categoryValue);
+                resultData.putExtra("Level", levelsID);
+
+                startActivity(resultData);
+            }
+        }, 1000);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (backPressedTime + 2000 > System.currentTimeMillis()) {
+
+            Intent intent = new Intent(QuizActivity.this, PlayActivity.class);
+            startActivity(intent);
+
+        } else {
+
+            Toast.makeText(this, "Nhấn lại nút Back để thoát", Toast.LENGTH_SHORT).show();
+        }
+        backPressedTime = System.currentTimeMillis();
+    }
+
+    private void unlockLevels() {
+
+        unlockAllLevels();
+        
+        unlockHistoryLevels();
+
+    }
+
+    private void unlockAllLevels() {
+
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(getPackageName() + Constant.MY_LEVEL_PREFFILE,
+                        Context.MODE_PRIVATE);
+
+        if (levelsID == 1 && categoryValue.equals("All")) {
+
+            UNLOCK_AL2 = correctAns;
+            //Tra loi dung >= 3 cau hoi de unlock level
+            if (UNLOCK_AL2 >= 3) {
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt(Constant.KEY_ALL_LEVEL_2, 1);
+                editor.apply();
+
+                SharedPreferences.Editor editor1 = sharedPreferences.edit();
+                editor1.putString(Constant.KEY_CAT_ALL_LEVEL_2, "Unlock");
+                editor1.apply();
+
+            }
+
+        } else if (levelsID == 2 && categoryValue.equals("All")) {
+
+            UNLOCK_AL3 = correctAns;
+
+            if (sharedPreferences.getInt(Constant.KEY_ALL_LEVEL_2, 0) == 1) {
+                //Tra loi dung >= 3 cau hoi de unlock level
+                if (UNLOCK_AL3 >= 3) {
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt(Constant.KEY_ALL_LEVEL_3, 1);
+                    editor.apply();
+
+                    SharedPreferences.Editor editor1 = sharedPreferences.edit();
+                    editor1.putString(Constant.KEY_CAT_ALL_LEVEL_3, "Unlock");
+                    editor1.apply();
+                }
+            }
+
+        }
+    }
+
+
+    private void unlockHistoryLevels() {
+
+        SharedPreferences sharedPreferences =
+                getSharedPreferences(getPackageName() + Constant.MY_LEVEL_PREFFILE,
+                        Context.MODE_PRIVATE);
+
+        if (levelsID == 1 && categoryValue.equals("History")) {
+
+            UNLOCK_HL2 = correctAns;
+            //Tra loi dung >= 3 cau hoi de unlock level
+            if (UNLOCK_HL2 >= 3) {
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt(Constant.KEY_HIS_LEVEL_2, 1);
+                editor.apply();
+
+                SharedPreferences.Editor editor1 = sharedPreferences.edit();
+                editor1.putString(Constant.KEY_CAT_HIS_LEVEL_2, "Unlock");
+                editor1.apply();
+
+            }
+
+        } else if (levelsID == 2 && categoryValue.equals("History")) {
+
+            UNLOCK_AL3 = correctAns;
+
+            if (sharedPreferences.getInt(Constant.KEY_HIS_LEVEL_2, 0) == 1) {
+                //Tra loi dung >= 3 cau hoi & da unlock level 2 de unlock level moi
+                if (UNLOCK_AL3 >= 3) {
+
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putInt(Constant.KEY_HIS_LEVEL_3, 1);
+                    editor.apply();
+
+                    SharedPreferences.Editor editor1 = sharedPreferences.edit();
+                    editor1.putString(Constant.KEY_CAT_HIS_LEVEL_3, "Unlock");
+                    editor1.apply();
+                }
+            }
+
         }
     }
 }

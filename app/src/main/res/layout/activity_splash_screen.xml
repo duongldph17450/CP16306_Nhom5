@@ -4,8 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
+    android:background="#e2eadf"
     android:orientation="vertical"
-    tools:context=".SplashScreenActivity">
+    tools:context=".Activities.SplashScreenActivity">
 
     <TextView
         android:id="@+id/tvLogoText"
@@ -13,7 +14,7 @@
         android:layout_height="wrap_content"
         android:text="Quiz App"
         android:textAlignment="center"
-        android:textSize="40sp"
+        android:textSize="50sp"
         android:textStyle="bold"
         android:textColor="#000"
         android:gravity="center_horizontal"
@@ -21,7 +22,7 @@
 
     <ImageView
         android:id="@+id/imgLogo"
-        android:src="@drawable/ic_launcher_background"
+        android:src="@drawable/logo"
         android:layout_width="360dp"
         android:layout_height="360dp"/>
 

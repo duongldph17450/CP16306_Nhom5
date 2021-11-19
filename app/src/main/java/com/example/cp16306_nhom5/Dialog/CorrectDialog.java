@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.cp16306_nhom5.Activities.QuizActivity;
 import com.example.cp16306_nhom5.R;
 
 public class CorrectDialog {
@@ -14,11 +15,15 @@ public class CorrectDialog {
 
     private Dialog correctDialog;
 
+    private QuizActivity mQuizActivity;
+
     public CorrectDialog(Context mContext) {
         this.mContext = mContext;
     }
 
-    public void correctDialog(int score) {
+    public void correctDialog(int score, final QuizActivity quizActivity) {
+
+        mQuizActivity = quizActivity;
 
         correctDialog = new Dialog(mContext);
         correctDialog.setContentView(R.layout.correct_dialog);
@@ -31,6 +36,7 @@ public class CorrectDialog {
             @Override
             public void onClick(View v) {
                 correctDialog.dismiss();
+                mQuizActivity.showQuestions(); //Hiển thị câu hỏi
             }
         });
 
@@ -40,7 +46,7 @@ public class CorrectDialog {
     }
 
     private void score(int score) {
-
+        //Hiển thị điểm
         TextView tvScore = (TextView) correctDialog.findViewById(R.id.tv_score);
         tvScore.setText("Điểm: " + String.valueOf(score));
     }

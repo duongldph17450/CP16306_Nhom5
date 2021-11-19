@@ -9,16 +9,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CP16306_Nhom6">
-        <activity android:name=".SplashScreenActivity"></activity>
-        <activity android:name=".PlayActivity" />
-        <activity android:name=".ResultActivity" />
-        <activity android:name=".QuizActivity">
+        <activity android:name=".Activities.AllLevelsActivity"></activity>
+        <activity android:name=".Activities.CategoryActivity" />
+        <activity android:name=".Activities.SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".Activities.PlayActivity" />
+        <activity android:name=".Activities.ResultActivity" />
+        <activity android:name=".Activities.QuizActivity" />
+        <activity android:name=".Activities.HistoryLevelsActivity" />
     </application>
 
 </manifest>
