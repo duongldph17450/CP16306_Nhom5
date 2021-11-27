@@ -1,6 +1,6 @@
 package com.example.cp16306_nhom5.model;
 
-public class Questions {
+public class    Questions {
 
     public static final String CATEGORY_ALL = "All";
     public static final String CATEGORY_HISTORY = "History";
